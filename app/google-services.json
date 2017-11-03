@@ -1,0 +1,130 @@
+{
+  "project_info": {
+    "project_number": "657779510797",
+    "firebase_url": "https://study-v2.firebaseio.com",
+    "project_id": "study-v2",
+    "storage_bucket": "study-v2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657779510797:android:19a29cd58fcc9697",
+        "android_client_info": {
+          "package_name": "com.howoh.studyv2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657779510797-4nfb8843l7lt5l11h18fh8m4rrt5esdi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA33Vx8wN3oZ4FD33diu_0c_EGgJbk5oRc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657779510797:android:0b9918768b25081a",
+        "android_client_info": {
+          "package_name": "com.howoh.studyv2.studyv2_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657779510797-36aoklvls2lotpb473pc84rf48hqis1i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.howoh.studyv2.studyv2_1",
+            "certificate_hash": "0804af349263e8fa8ac055adfd824c086f2d76a9"
+          }
+        },
+        {
+          "client_id": "657779510797-4nfb8843l7lt5l11h18fh8m4rrt5esdi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA33Vx8wN3oZ4FD33diu_0c_EGgJbk5oRc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657779510797-4nfb8843l7lt5l11h18fh8m4rrt5esdi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657779510797:android:6c94ca78079c50a0",
+        "android_client_info": {
+          "package_name": "com.howoh.studyv2.studyv2_2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657779510797-hltsudt626lj0e6otiljipqnfji8hh3e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.howoh.studyv2.studyv2_2",
+            "certificate_hash": "0804af349263e8fa8ac055adfd824c086f2d76a9"
+          }
+        },
+        {
+          "client_id": "657779510797-4nfb8843l7lt5l11h18fh8m4rrt5esdi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA33Vx8wN3oZ4FD33diu_0c_EGgJbk5oRc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657779510797-4nfb8843l7lt5l11h18fh8m4rrt5esdi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
