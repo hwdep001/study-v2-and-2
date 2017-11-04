@@ -44,8 +44,6 @@ public class SignInActivity extends BaseActivity implements
     private GoogleApiClient mGoogleApiClient;
     private FirebaseFirestore mDb;
 
-    private User user;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +65,9 @@ public class SignInActivity extends BaseActivity implements
         mDb = FirebaseFirestore.getInstance();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        showProgressDialog();
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        signInProcess(currentUser);
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
@@ -89,7 +83,7 @@ public class SignInActivity extends BaseActivity implements
                 firebaseAuthWithGoogle(account);
             } else {
                 // Google Sign In failed, update UI appropriately
-                signInProcess(null);
+                hideProgressDialog();
             }
         }
     }
@@ -113,30 +107,19 @@ public class SignInActivity extends BaseActivity implements
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            signInProcess(null);
+                            hideProgressDialog();
                         }
-
-                        hideProgressDialog();
                     }
                 });
     }
 
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
     private void signInProcess(final FirebaseUser fireUser) {
 
-        if(fireUser == null) {
-            hideProgressDialog();
-            return;
-        }
-
-        mDb.collection("users").document(fireUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        mDb.collection("users").document(fireUser.getUid()).get().addOnSuccessListener(this, new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 String currentDateStr = CommonUtil.dateToyyyy_MM_dd_HH_mm_ss(new Date());
+                User user = null;
 
                 if(documentSnapshot.exists()) {
                     user = documentSnapshot.toObject(User.class);
@@ -151,42 +134,19 @@ public class SignInActivity extends BaseActivity implements
                 user.setPhotoURL(fireUser.getPhotoUrl().toString());
                 user.setLastSignInDate(currentDateStr);
 
-                mDb.collection("users").document(documentSnapshot.getId()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        hideProgressDialog();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        hideProgressDialog();
-                    }
-                });
+                final String test = user.toString();
 
-                if(user.isAuthenticated()) {
-                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                mDb.collection("users").document(documentSnapshot.getId()).set(user);
+
+                hideProgressDialog();
+
+                if(user.getAuthenticated()) {
+                    startIntent(MainActivity.class, true, true);
                 } else {
-                    signOut();
                     Toast.makeText(getApplicationContext(), "인증 실패", Toast.LENGTH_LONG).show();
                 }
             }
         });
-    }
-
-    private void signOut() {
-
-        // Firebase sign out
-        mAuth.signOut();
-
-        // Google sign out
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-                    }
-                });
     }
 
     @Override
@@ -194,6 +154,17 @@ public class SignInActivity extends BaseActivity implements
         int i = v.getId();
         if (i == R.id.sign_in_button) {
             signIn();
+        }
+    }
+
+    private void startIntent(Class nextClass, boolean isActivityClear, boolean isNotAnimation) {
+        Intent intent = new Intent(SignInActivity.this, nextClass);
+        if(isActivityClear) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+        startActivity(intent);
+        if(isNotAnimation) {
+            overridePendingTransition(0, 0);
         }
     }
 }

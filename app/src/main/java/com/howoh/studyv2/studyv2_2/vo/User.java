@@ -77,7 +77,7 @@ public class User {
         this.lastSignInDate = lastSignInDate;
     }
 
-    public boolean isAuthenticated() {
+    public boolean getAuthenticated() {
         return authenticated;
     }
 
