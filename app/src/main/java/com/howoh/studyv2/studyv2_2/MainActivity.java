@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +20,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.howoh.studyv2.studyv2_2.service.AuthService;
+import com.howoh.studyv2.studyv2_2.util.CommonUtil;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,6 +40,7 @@ public class MainActivity extends BaseActivity
 
     private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
+    private FirebaseFirestore mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +75,9 @@ public class MainActivity extends BaseActivity
                 .build();
 
         mAuth = FirebaseAuth.getInstance();
+        mDb = FirebaseFirestore.getInstance();
+
+        updateUserInfo(mAuth.getCurrentUser());
     }
 
     @Override
@@ -124,6 +138,22 @@ public class MainActivity extends BaseActivity
     }
 
     ////////////////////////////////////////////////////////////////
+
+    private void updateUserInfo(final FirebaseUser currentUser) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("email", currentUser.getEmail());
+        map.put("name", currentUser.getDisplayName());
+        map.put("photoURL", currentUser.getPhotoUrl().toString());
+        map.put("lastSignInDate", CommonUtil.dateToyyyy_MM_dd_HH_mm_ss(new Date()));
+
+        mDb.collection("users").document(currentUser.getUid()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                AuthService.setAuthInfo(currentUser.getUid());
+            }
+        });
+    }
+
     private void signOut() {
 
         // Firebase sign out

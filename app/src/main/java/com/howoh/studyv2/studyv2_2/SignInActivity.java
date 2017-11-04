@@ -127,16 +127,13 @@ public class SignInActivity extends BaseActivity implements
                     user = new User(fireUser.getUid());
                     user.setCreationDate(currentDateStr);
                     user.setAuthenticated(false);
+                    user.setEmail(fireUser.getEmail());
+                    user.setName(fireUser.getDisplayName());
+                    user.setPhotoURL(fireUser.getPhotoUrl().toString());
+                    user.setLastSignInDate(currentDateStr);
+
+                    mDb.collection("users").document(documentSnapshot.getId()).set(user);
                 }
-
-                user.setEmail(fireUser.getEmail());
-                user.setName(fireUser.getDisplayName());
-                user.setPhotoURL(fireUser.getPhotoUrl().toString());
-                user.setLastSignInDate(currentDateStr);
-
-                final String test = user.toString();
-
-                mDb.collection("users").document(documentSnapshot.getId()).set(user);
 
                 hideProgressDialog();
 

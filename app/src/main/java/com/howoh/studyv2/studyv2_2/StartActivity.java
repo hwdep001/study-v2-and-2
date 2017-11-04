@@ -8,8 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.howoh.studyv2.studyv2_2.util.CommonUtil;
+import com.howoh.studyv2.studyv2_2.vo.User;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by howoh on 2017-11-03.

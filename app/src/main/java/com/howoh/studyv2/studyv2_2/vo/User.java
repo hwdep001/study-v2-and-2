@@ -1,10 +1,19 @@
 package com.howoh.studyv2.studyv2_2.vo;
 
+import android.util.Log;
+
+import com.howoh.studyv2.studyv2_2.StartActivity;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by howoh on 2017-11-03.
  */
 
-public class User {
+public class User extends Object {
 
     private String uid;
     private String email;
@@ -95,5 +104,32 @@ public class User {
                 ", lastSignInDate='" + lastSignInDate + '\'' +
                 ", authenticated=" + authenticated +
                 '}';
+    }
+
+    public Map<String, Object> convertMap() {
+        Map<String, Object> map = new HashMap<>();
+
+        Class<?> thisClass = null;
+
+        try {
+            thisClass = Class.forName(this.getClass().getName());
+            Field[] fields = User.class.getDeclaredFields();
+
+            for(Field field: fields) {
+                if (Modifier.isPrivate(field.getModifiers())) {
+                    Object value = field.get(this);
+                    if(value != null) {
+                        map.put(field.getName(), value);
+                    }
+                }
+            }
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return map;
     }
 }
