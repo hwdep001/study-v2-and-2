@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
@@ -38,10 +39,15 @@ public class MainActivity extends BaseActivity
 
     private FragmentManager fm;
 
+    // firebase
     private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseFirestore mDb;
     private FirebaseUser currentUser;
+
+    // onBackPressed
+    private final long FINISH_INTERVAL_TIME = 2000;
+    private long   backPressedTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +108,18 @@ public class MainActivity extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            long tempTime = System.currentTimeMillis();
+            long intervalTime = tempTime - backPressedTime;
+
+            if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime)
+            {
+                super.onBackPressed();
+            }
+            else
+            {
+                backPressedTime = tempTime;
+                Toast.makeText(getApplicationContext(), R.string.back_pressed_msg, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
