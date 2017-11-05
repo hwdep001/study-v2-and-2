@@ -53,4 +53,15 @@ public class BaseActivity extends AppCompatActivity implements
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
+
+    public void startIntent(Context startContext, Class nextClass, boolean isActivityClear, boolean isNotAnimation) {
+        Intent intent = new Intent(startContext, nextClass);
+        if(isActivityClear) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        }
+        startActivity(intent);
+        if(isNotAnimation) {
+            overridePendingTransition(0, 0);
+        }
+    }
 }

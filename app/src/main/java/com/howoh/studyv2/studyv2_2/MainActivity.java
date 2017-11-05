@@ -1,12 +1,8 @@
 package com.howoh.studyv2.studyv2_2;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -164,21 +160,9 @@ public class MainActivity extends BaseActivity
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(@NonNull Status status) {
-                        Intent intent = new Intent(MainActivity.this, SignInActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+                        startIntent(MainActivity.this, SignInActivity.class, true, true);
                     }
                 });
     }
 
-    private void startIntent(Class nextClass, boolean isActivityClear, boolean isNotAnimation) {
-        Intent intent = new Intent(MainActivity.this, nextClass);
-        if(isActivityClear) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        }
-        startActivity(intent);
-        if(isNotAnimation) {
-            overridePendingTransition(0, 0);
-        }
-    }
 }

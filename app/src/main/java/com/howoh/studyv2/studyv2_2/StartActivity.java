@@ -1,25 +1,17 @@
 package com.howoh.studyv2.studyv2_2;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.howoh.studyv2.studyv2_2.util.CommonUtil;
-import com.howoh.studyv2.studyv2_2.vo.User;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by howoh on 2017-11-03.
  */
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends BaseActivity {
 
     private static final String TAG = StartActivity.class.getSimpleName();
     private FirebaseFirestore mDb;
@@ -32,20 +24,9 @@ public class StartActivity extends AppCompatActivity {
         mDb = FirebaseFirestore.getInstance();
 
         if(currentUser == null) {
-            startIntent(SignInActivity.class, true, true);
+            startIntent(StartActivity.this, SignInActivity.class, true, true);
         } else {
-            startIntent(MainActivity.class, true, true);
-        }
-    }
-
-    private void startIntent(Class nextClass, boolean isActivityClear, boolean isNotAnimation) {
-        Intent intent = new Intent(StartActivity.this, nextClass);
-        if(isActivityClear) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        }
-        startActivity(intent);
-        if(isNotAnimation) {
-            overridePendingTransition(0, 0);
+            startIntent(StartActivity.this, MainActivity.class, true, true);
         }
     }
 }
