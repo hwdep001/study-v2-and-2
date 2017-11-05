@@ -1,5 +1,6 @@
 package com.howoh.studyv2.studyv2_2;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -10,7 +11,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,6 +42,7 @@ public class MainActivity extends BaseActivity
     private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseFirestore mDb;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +60,30 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        fm = getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.content_main, new CatListFragment()).commit();
+
         initFirebase();
+        initNavText(navigationView);
+    }
+
+    private void initNavText(NavigationView navigationView) {
+        View navHeaderMain = navigationView.getHeaderView(0);
+        ImageView photoURLView = (ImageView) navHeaderMain.findViewById(R.id.nav_header_main_photoURL);
+        TextView nameView = (TextView) navHeaderMain.findViewById(R.id.nav_header_main_name);
+        TextView emailView = (TextView) navHeaderMain.findViewById(R.id.nav_header_main_email);
+        Glide.with(MainActivity.this).load(currentUser.getPhotoUrl()).into(photoURLView);
+        nameView.setText(currentUser.getDisplayName());
+        emailView.setText(currentUser.getEmail());
     }
 
     private void initFirebase() {
+
+        mAuth = FirebaseAuth.getInstance();
+        mDb = FirebaseFirestore.getInstance();
+
+        currentUser = mAuth.getCurrentUser();
+        updateUserInfo(currentUser);
 
         // firebase auth
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -69,11 +95,6 @@ public class MainActivity extends BaseActivity
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-        mAuth = FirebaseAuth.getInstance();
-        mDb = FirebaseFirestore.getInstance();
-
-        updateUserInfo(mAuth.getCurrentUser());
     }
 
     @Override
@@ -115,17 +136,17 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_ew) {
-//            fm.beginTransaction().replace(R.id.main, new EwFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_main, new CatListFragment()).commit();
         } else if (id == R.id.nav_lw) {
-//            fm.beginTransaction().replace(R.id.main, new LwFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_main, new CatListFragment()).commit();
         } else if (id == R.id.nav_c4) {
-//            fm.beginTransaction().replace(R.id.main, new C4Fragment()).commit();
+            fm.beginTransaction().replace(R.id.content_main, new CatListFragment()).commit();
         } else if (id == R.id.nav_cc) {
-//            fm.beginTransaction().replace(R.id.main, new CcFragment()).commit();
-        } else if (id == R.id.nav_info) {
-//            fm.beginTransaction().replace(R.id.main, new InfoFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_main, new CatListFragment()).commit();
         } else if (id == R.id.nav_sign_out) {
             signOut();
+        } else if (id == R.id.nav_test) {
+            fm.beginTransaction().replace(R.id.content_main, new TestFragment()).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
