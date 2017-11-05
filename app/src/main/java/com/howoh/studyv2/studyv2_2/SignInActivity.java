@@ -60,9 +60,15 @@ public class SignInActivity extends BaseActivity implements
 
         mAuth = FirebaseAuth.getInstance();
         mDb = FirebaseFirestore.getInstance();
+
     }
 
     private void signIn() {
+
+        if(mAuth.getCurrentUser() != null) {
+            signOut();
+        }
+
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -149,5 +155,14 @@ public class SignInActivity extends BaseActivity implements
         if (i == R.id.sign_in_button) {
             signIn();
         }
+    }
+
+    private void signOut() {
+
+        // Firebase sign out
+        mAuth.signOut();
+
+        // Google sign out
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
     }
 }
