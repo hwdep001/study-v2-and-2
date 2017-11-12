@@ -8,19 +8,8 @@ public class Level {
 
     private int id;
     private String name;
-    private boolean df;
 
     public Level() {}
-
-    public Level(int id) {
-        this.id = id;
-    }
-
-    public Level(int id, String name, boolean df) {
-        this.id = id;
-        this.name = name;
-        this.df = df;
-    }
 
     public int getId() {
         return id;
@@ -38,12 +27,22 @@ public class Level {
         this.name = name;
     }
 
-    public boolean isDf() {
-        return df;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Level level = (Level) o;
+
+        if (id != level.id) return false;
+        return name.equals(level.name);
     }
 
-    public void setDf(boolean df) {
-        this.df = df;
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        return result;
     }
 
     @Override
@@ -51,7 +50,6 @@ public class Level {
         return "Level{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", df=" + df +
                 '}';
     }
 }

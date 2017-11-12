@@ -88,6 +88,32 @@ public class Word {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Word word = (Word) o;
+
+        if (num != word.num) return false;
+        if (!id.equals(word.id)) return false;
+        if (!head1.equals(word.head1)) return false;
+        if (head2 != null ? !head2.equals(word.head2) : word.head2 != null) return false;
+        if (!body1.equals(word.body1)) return false;
+        return body2 != null ? body2.equals(word.body2) : word.body2 == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + head1.hashCode();
+        result = 31 * result + (head2 != null ? head2.hashCode() : 0);
+        result = 31 * result + body1.hashCode();
+        result = 31 * result + (body2 != null ? body2.hashCode() : 0);
+        result = 31 * result + num;
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Word{" +
                 "id='" + id + '\'' +

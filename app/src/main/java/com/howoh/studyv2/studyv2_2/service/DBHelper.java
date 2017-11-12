@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.howoh.studyv2.studyv2_2.vo.Category;
 import com.howoh.studyv2.studyv2_2.vo.Lecture;
+import com.howoh.studyv2.studyv2_2.vo.Level;
 import com.howoh.studyv2.studyv2_2.vo.Subject;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(ContactDBSubject.CREATE_TABLE);
         db.execSQL(ContactDBCategory.CREATE_TABLE);
         db.execSQL(ContactDBLecture.CREATE_TABLE);
+        db.execSQL(ContactDBLevel.CREATE_TABLE);
         Log.d(TAG, "[test]-onCreate");
     }
 
@@ -61,6 +63,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(ContactDBSubject.DROP_TABLE);
         db.execSQL(ContactDBCategory.DROP_TABLE);
         db.execSQL(ContactDBLecture.DROP_TABLE);
+        db.execSQL(ContactDBLevel.DROP_TABLE);
         Log.d(TAG, "[test]-dropTable");
     }
 
@@ -151,12 +154,12 @@ public class DBHelper extends SQLiteOpenHelper {
         ContactDBLecture.insert(getWritableDatabase(), lecture);
     }
 
-    public void updateLectureWithOutVersion(Lecture lecture) {
-        lecture.setVersion(-1);
+    public void updateLecture(Lecture lecture) {
         ContactDBLecture.update(getWritableDatabase(), lecture);
     }
 
-    public void updateLecture(Lecture lecture) {
+    public void updateLectureWithOutVersion(Lecture lecture) {
+        lecture.setVersion(-1);
         ContactDBLecture.update(getWritableDatabase(), lecture);
     }
 
@@ -176,4 +179,28 @@ public class DBHelper extends SQLiteOpenHelper {
         return ContactDBLecture.getAll(getWritableDatabase());
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // LECTURE
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void insertLevel(Level level) {
+        ContactDBLevel.insert(getWritableDatabase(), level);
+    }
+
+    public void updateLevel(Level level) {
+        ContactDBLevel.update(getWritableDatabase(), level);
+    }
+
+    public void deleteLevel(int id) {
+        ContactDBLevel.delete(getWritableDatabase(), id);
+    }
+
+    public Level getLevel(int id) {
+        return ContactDBLevel.getById(getWritableDatabase(), id);
+    }
+
+    public List<Level> getLevels() {
+        return ContactDBLevel.getAll(getWritableDatabase());
+    }
 }

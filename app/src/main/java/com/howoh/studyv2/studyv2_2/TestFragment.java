@@ -14,10 +14,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.howoh.studyv2.studyv2_2.service.ContactDBCategory;
 import com.howoh.studyv2.studyv2_2.service.ContactDBLecture;
+import com.howoh.studyv2.studyv2_2.service.ContactDBLevel;
 import com.howoh.studyv2.studyv2_2.service.ContactDBSubject;
 import com.howoh.studyv2.studyv2_2.service.DBHelper;
 import com.howoh.studyv2.studyv2_2.vo.Category;
 import com.howoh.studyv2.studyv2_2.vo.Lecture;
+import com.howoh.studyv2.studyv2_2.vo.Level;
 import com.howoh.studyv2.studyv2_2.vo.Subject;
 
 import java.util.HashMap;
@@ -45,6 +47,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
         Button subSelectBtn = (Button) v.findViewById(R.id.btn_sub_select);
         Button catSelectBtn = (Button) v.findViewById(R.id.btn_cat_select);
         Button lecSelectBtn = (Button) v.findViewById(R.id.btn_lec_select);
+        Button levSelectBtn = (Button) v.findViewById(R.id.btn_lev_select);
 
         allDelBtn.setOnClickListener(this);
         verCheckBtn.setOnClickListener(this);
@@ -52,6 +55,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
         subSelectBtn.setOnClickListener(this);
         catSelectBtn.setOnClickListener(this);
         lecSelectBtn.setOnClickListener(this);
+        levSelectBtn.setOnClickListener(this);
 
         return v;
     }
@@ -89,6 +93,13 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
                     }
                 }
                 break;
+            case R.id.btn_lev_select:
+                if(dbHelper.isExistTable(db, ContactDBLevel.TABLE_NAME)) {
+                    for(Level level: dbHelper.getLevels()) {
+                        Log.d(TAG, "[test]-select levs: " + level.toString());
+                    }
+                }
+                break;
         }
     }
 
@@ -96,13 +107,13 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
         showProgressDialog(null);
         dbHelper.onCreate(db);
         checkSub();
+        checkLev();
     }
 
     private void checkSub() {
         mDb.collection("subs").orderBy("num").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot subsDs) {
-
 
                 for(DocumentSnapshot subDs: subsDs) {
                     Subject sub = subDs.toObject(Subject.class);
@@ -175,8 +186,6 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
                         dbHelper.deleteCategory(key);
                         Log.d(TAG, "[test]-checkCat-remove : " + map.get(key).getName());
                     }
-
-                    hideProgressDialog();
                 }
             });
         }
@@ -244,5 +253,39 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
 
     private void checkWord(DocumentSnapshot lecDs, final Lecture lec__) {
         Log.d(TAG, "[test]-checkWord LEC : " + lec__.getName());
+    }
+
+    private void checkLev() {
+        mDb.collection("levels").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot levsDs) {
+
+                Map<Integer, Level> map = new HashMap<>();
+
+                for(Level lev: dbHelper.getLevels()) {
+                    map.put(lev.getId(), lev);
+                }
+
+                for(DocumentSnapshot levDs: levsDs) {
+                    Level lev = levDs.toObject(Level.class);
+                    lev.setId(Integer.parseInt(levDs.getId()));
+                    Level lev_ = map.get(lev.getId());
+
+                    if (lev_ == null) {
+                        dbHelper.insertLevel(lev);
+                    } else {
+                        map.remove(lev.getId());
+                    }
+
+                    if(lev_ != null && !lev.equals(lev_)) {
+                        dbHelper.updateLevel(lev);
+                    }
+                }
+
+                for(int key: map.keySet()) {
+                    dbHelper.deleteLevel(key);
+                }
+            }
+        });
     }
 }
