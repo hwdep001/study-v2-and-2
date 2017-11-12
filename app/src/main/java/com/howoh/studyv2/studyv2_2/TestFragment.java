@@ -135,30 +135,114 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
                     }
 
                     for(DocumentSnapshot catDs: catsDs) {
+
+                        boolean lecCheckFlag = false;
+
                         Category cat = catDs.toObject(Category.class);
                         cat.setId(catDs.getId());
                         cat.setSubjectId(subDs.getId());
                         Category cat_ = map.get(cat.getId());
-                        Log.d(TAG, "[test]- cat_: " + (cat_== null));
 
+                        Log.d(TAG, "[test]-checkCat : " + cat.getName());
+
+                        // insert
                         if (cat_ == null) {
-                            dbHelper.insertCategory(cat);
+                            lecCheckFlag = true;
+                            dbHelper.insertCategoryWithOutVersion(cat);
+                            Log.d(TAG, "[test]-checkCat-insert : " + cat.getName());
                         } else {
                             map.remove(cat.getId());
                         }
 
-                        if (!cat.equals(cat_)) {
-                            dbHelper.updateCategory(cat);
+                        // update
+                        if(cat_ != null) {
+                            if(cat.getVersion() != cat_.getVersion()) {
+                                lecCheckFlag = true;
+                            }
+
+                            if (!cat.equals(cat_)) {
+                                dbHelper.updateCategoryWithOutVersion(cat);
+                                Log.d(TAG, "[test]-checkCat-update : " + cat.getName());
+                            }
+                        }
+
+                        if(lecCheckFlag) {
+                            checkLec(catDs, cat);
                         }
                     }
 
                     for(String key: map.keySet()) {
                         dbHelper.deleteCategory(key);
+                        Log.d(TAG, "[test]-checkCat-remove : " + map.get(key).getName());
                     }
 
                     hideProgressDialog();
                 }
             });
         }
+    }
+
+    private void checkLec(DocumentSnapshot catDs, final Category cat__) {
+        Log.d(TAG, "[test]-checkLec CAT: " + cat__.getName());
+
+        catDs.getReference().collection("lecs").orderBy("num").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot lecsDs) {
+
+                Map<String, Lecture> map = new HashMap<>();
+
+                for(Lecture lec: dbHelper.getLectures(cat__.getId())) {
+                    map.put(lec.getId(), lec);
+                }
+
+                for(DocumentSnapshot lecDs: lecsDs) {
+
+                    boolean wordCheckFlag = false;
+
+                    Lecture lec = lecDs.toObject(Lecture.class);
+                    lec.setId(lecDs.getId());
+                    lec.setCategoryId(cat__.getId());
+                    Lecture lec_ = map.get(lec.getId());
+
+                    Log.d(TAG, "[test]-checkLec : " + lec.getName());
+
+                    // insert
+                    if (lec_ == null) {
+                        wordCheckFlag = true;
+                        dbHelper.insertLectureWithOutVersion(lec);
+                        Log.d(TAG, "[test]-checkLec-insert : " + lec.getName());
+                    } else {
+                        map.remove(lec.getId());
+                    }
+
+                    // update
+                    if(lec_ != null) {
+                        if(lec.getVersion() != lec_.getVersion()) {
+                            wordCheckFlag = true;
+                        }
+
+                        if (!lec.equals(lec_)) {
+                            dbHelper.updateLectureWithOutVersion(lec);
+                            Log.d(TAG, "[test]-checkLec-update : " + lec.getName());
+                        }
+                    }
+
+                    if(wordCheckFlag) {
+                        checkWord(lecDs, lec);
+                    }
+                }
+
+                for(String key: map.keySet()) {
+                    dbHelper.deleteLecture(key);
+                    Log.d(TAG, "[test]-checkLec-remove : " + map.get(key).getName());
+                }
+
+                hideProgressDialog();
+            }
+        });
+    }
+
+    private void checkWord(DocumentSnapshot lecDs, final Lecture lec__) {
+        Log.d(TAG, "[test]-checkWord LEC : " + lec__.getName());
     }
 }

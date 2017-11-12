@@ -63,7 +63,6 @@ public class Lecture {
         Lecture lecture = (Lecture) o;
 
         if (num != lecture.num) return false;
-        if (version != lecture.version) return false;
         if (!id.equals(lecture.id)) return false;
         return name.equals(lecture.name);
     }
@@ -73,7 +72,6 @@ public class Lecture {
         int result = id.hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + num;
-        result = 31 * result + version;
         return result;
     }
 

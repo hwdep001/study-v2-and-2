@@ -108,7 +108,17 @@ public class DBHelper extends SQLiteOpenHelper {
         ContactDBCategory.insert(getWritableDatabase(), category);
     }
 
+    public void insertCategoryWithOutVersion(Category category) {
+        category.setVersion(-1);
+        ContactDBCategory.insert(getWritableDatabase(), category);
+    }
+
     public void updateCategory(Category category) {
+        ContactDBCategory.update(getWritableDatabase(), category);
+    }
+
+    public void updateCategoryWithOutVersion(Category category) {
+        category.setVersion(-1);
         ContactDBCategory.update(getWritableDatabase(), category);
     }
 
@@ -134,6 +144,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void insertLecture(Lecture lecture) {
         ContactDBLecture.insert(getWritableDatabase(), lecture);
+    }
+
+    public void insertLectureWithOutVersion(Lecture lecture) {
+        lecture.setVersion(-1);
+        ContactDBLecture.insert(getWritableDatabase(), lecture);
+    }
+
+    public void updateLectureWithOutVersion(Lecture lecture) {
+        lecture.setVersion(-1);
+        ContactDBLecture.update(getWritableDatabase(), lecture);
     }
 
     public void updateLecture(Lecture lecture) {

@@ -63,7 +63,6 @@ public class Category {
         Category category = (Category) o;
 
         if (num != category.num) return false;
-        if (version != category.version) return false;
         if (!id.equals(category.id)) return false;
         return name.equals(category.name);
     }
@@ -73,7 +72,6 @@ public class Category {
         int result = id.hashCode();
         result = 31 * result + name.hashCode();
         result = 31 * result + num;
-        result = 31 * result + version;
         return result;
     }
 
