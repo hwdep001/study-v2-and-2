@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.howoh.studyv2.studyv2_2.vo.Category;
+import com.howoh.studyv2.studyv2_2.vo.Lecture;
 import com.howoh.studyv2.studyv2_2.vo.Subject;
 
 import java.util.ArrayList;
@@ -26,41 +28,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EXIST_TABLE =
             "SELECT name FROM sqlite_master WHERE type='table' AND name= ?";
 
-//    private static final String TABLE_SUBJECT = "subject";
-//    private static final String TABLE_CATEGORY = "category";
-//    private static final String TABLE_LECTURE = "lecture";
-//    private static final String TABLE_WORD = "word";
-//    private static final String TABLE_LEVEL = "level";
-//    private static final String TABLE_COUNT = "count";
-//
-//    // Common column names
-//    private static final String COLUMN_ID = "id";
-//    private static final String COLUMN_NAME = "name";
-//    private static final String COLUMN_NUM = "num";
-//    private static final String COLUMN_DEFALUT = "default";
-//
-//    // subject
-//
-//    // category
-//    private static final String COLUMN_SUBJECT_ID = "subjectId";
-//
-//    // lecture
-//    private static final String COLUMN_CATEGORY_ID = "categoryId";
-//
-//    // word
-//    private static final String COLUMN_HEAD1 = "head1";
-//    private static final String COLUMN_HEAD2 = "head2";
-//    private static final String COLUMN_BODY1 = "body1";
-//    private static final String COLUMN_BODY2 = "body2";
-//    private static final String COLUMN_LECTURE_ID = "lectureId";
-//    private static final String COLUMN_LEVEL_ID = "levelId";
-
-
     public static DBHelper getInstance(Context context) {
         if(db == null) {
             db = new DBHelper(context);
         }
-
         return db;
     }
 
@@ -69,19 +40,31 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        String query = String.format ("PRAGMA foreign_keys = %s","ON");
+        db.execSQL(query);
+    }
+
+    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        initSubject(db);
+        db.execSQL(ContactDBSubject.CREATE_TABLE);
+        db.execSQL(ContactDBCategory.CREATE_TABLE);
+        db.execSQL(ContactDBLecture.CREATE_TABLE);
+        Log.d(TAG, "[test]-onCreate");
     }
 
     public void dropTable(SQLiteDatabase db) {
         db.execSQL(ContactDBSubject.DROP_TABLE);
+        db.execSQL(ContactDBCategory.DROP_TABLE);
+        db.execSQL(ContactDBLecture.DROP_TABLE);
         Log.d(TAG, "[test]-dropTable");
     }
 
-    private boolean isExistTable(SQLiteDatabase db, String tableName) {
+    public boolean isExistTable(SQLiteDatabase db, String tableName) {
         boolean result = false;
         Cursor cursor = null;
 
@@ -97,86 +80,80 @@ public class DBHelper extends SQLiteOpenHelper {
         return result;
     }
 
-
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // SUBJECT
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void initSubject(SQLiteDatabase db) {
-
-        boolean isExistTable = isExistTable(db, ContactDBSubject.TABLE_NAME);
-
-        if(!isExistTable) {
-            db.execSQL(ContactDBSubject.CREATE_TABLE);
-            for(Subject subject : ContactDBSubject.getDefaultSubjectList()) {
-                insertSubject(subject);
-            }
-        }
-
-        Log.d(TAG, "[test]-initSubject");
+    public void insertSubject(Subject subject) {
+        ContactDBSubject.insert(getWritableDatabase(), subject);
     }
 
+    public void updateSubject(Subject subject) {
+        ContactDBSubject.update(getWritableDatabase(), subject);
+    }
 
-    public void insertSubject(Subject subject) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL(ContactDBSubject.INSERT, new Object[] {subject.getId(), subject.getName(), subject.getNum()});
-        db.close();
+    public Subject getSubject(String id) {
+        return ContactDBSubject.getById(getWritableDatabase(), id);
     }
 
     public List<Subject> getSubjecs() {
-        SQLiteDatabase db = getWritableDatabase();
-        List<Subject> result = new ArrayList<>();
-        Subject item = null;
-        Cursor cursor = null;
-
-        try {
-            cursor = db.rawQuery(ContactDBSubject.SELECT_ALL, null);
-            while (cursor.moveToNext()) {
-                item = new Subject();
-                item.setId(cursor.getString(0));
-                item.setName(cursor.getString(1));
-                item.setNum(cursor.getInt(2));
-                result.add(item);
-            }
-        } finally {
-            cursor.close();
-        }
-
-        return result;
+        return ContactDBSubject.getAll(getWritableDatabase());
     }
 
-//    public void update(String item, int price) {
-//        SQLiteDatabase db = getWritableDatabase();
-//        db.execSQL("UPDATE MONEYBOOK SET price=" + price + " WHERE item='" + item + "';");
-//        db.close();
-//    }
-//
-//    public void delete(String item) {
-//        SQLiteDatabase db = getWritableDatabase();
-//        db.execSQL("DELETE FROM MONEYBOOK WHERE item='" + item + "';");
-//        db.close();
-//    }
-//
-//    public String getResult() {
-//        // 읽기가 가능하게 DB 열기
-//        SQLiteDatabase db = getReadableDatabase();
-//        String result = "";
-//
-//        // DB에 있는 데이터를 쉽게 처리하기 위해 Cursor를 사용하여 테이블에 있는 모든 데이터 출력
-//        Cursor cursor = db.rawQuery("SELECT * FROM MONEYBOOK", null);
-//        while (cursor.moveToNext()) {
-//            result += cursor.getString(0)
-//                    + " : "
-//                    + cursor.getString(1)
-//                    + " | "
-//                    + cursor.getInt(2)
-//                    + "원 "
-//                    + cursor.getString(3)
-//                    + "\n";
-//        }
-//
-//        return result;
-//    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // CATEGORY
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void insertCategory(Category category) {
+        ContactDBCategory.insert(getWritableDatabase(), category);
+    }
+
+    public void updateCategory(Category category) {
+        ContactDBCategory.update(getWritableDatabase(), category);
+    }
+
+    public void deleteCategory(String id) {
+        ContactDBCategory.delete(getWritableDatabase(), id);
+    }
+
+    public Category getCategory(String id) {
+        return ContactDBCategory.getById(getWritableDatabase(), id);
+    }
+
+    public List<Category> getCategories(String subjectId) {
+        return ContactDBCategory.getAllBySubject(getWritableDatabase(), subjectId);
+    }
+
+    public List<Category> getCategories() {
+        return ContactDBCategory.getAll(getWritableDatabase());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // LECTURE
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void insertLecture(Lecture lecture) {
+        ContactDBLecture.insert(getWritableDatabase(), lecture);
+    }
+
+    public void updateLecture(Lecture lecture) {
+        ContactDBLecture.update(getWritableDatabase(), lecture);
+    }
+
+    public void deleteLecture(String id) {
+        ContactDBLecture.delete(getWritableDatabase(), id);
+    }
+
+    public Lecture getLecture(String id) {
+        return ContactDBLecture.getById(getWritableDatabase(), id);
+    }
+
+    public List<Lecture> getLectures(String categoryId) {
+        return ContactDBLecture.getAllByCategory(getWritableDatabase(), categoryId);
+    }
+
+    public List<Lecture> getLectures() {
+        return ContactDBLecture.getAll(getWritableDatabase());
+    }
 
 }

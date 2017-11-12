@@ -9,27 +9,11 @@ public class Lecture {
     private String id;
     private String name;
     private int num;
+    private int version;
 
     private String categoryId;
 
     public Lecture() {}
-
-    public Lecture(String id) {
-        this.id = id;
-    }
-
-    public Lecture(String id, String name, int num) {
-        this.id = id;
-        this.name = name;
-        this.num = num;
-    }
-
-    public Lecture(String id, String name, int num, String categoryId) {
-        this.id = id;
-        this.name = name;
-        this.num = num;
-        this.categoryId = categoryId;
-    }
 
     public String getId() {
         return id;
@@ -55,6 +39,14 @@ public class Lecture {
         this.num = num;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
     public String getCategoryId() {
         return categoryId;
     }
@@ -64,11 +56,34 @@ public class Lecture {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Lecture lecture = (Lecture) o;
+
+        if (num != lecture.num) return false;
+        if (version != lecture.version) return false;
+        if (!id.equals(lecture.id)) return false;
+        return name.equals(lecture.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + num;
+        result = 31 * result + version;
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Lecture{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", num=" + num +
+                ", version=" + version +
                 ", categoryId='" + categoryId + '\'' +
                 '}';
     }

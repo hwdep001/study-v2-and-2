@@ -5,33 +5,83 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/btn_create"
+        android:id="@+id/btn_sub_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_toRightOf="@+id/textView"
+        android:text="select" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ver_check"
+        android:layout_marginTop="17dp"
+        android:text="sub"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <Button
+        android:id="@+id/ver_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="ver_check" />
+
+    <Button
+        android:id="@+id/all_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="29dp"
-        android:layout_marginRight="29dp"
-        android:layout_marginTop="19dp"
-        android:layout_toLeftOf="@+id/textView2"
-        android:layout_toStartOf="@+id/textView2"
-        android:text="create" />
+        android:layout_toEndOf="@+id/ver_check"
+        android:layout_toRightOf="@+id/ver_check"
+        android:text="all_delete" />
 
-    <Button
-        android:id="@+id/btn_drop"
+    <TextView
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/btn_create"
-        android:text="drop" />
+        android:layout_below="@+id/btn_sub_select"
+        android:layout_marginTop="17dp"
+        android:text="cat"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
     <Button
-        android:id="@+id/btn_select"
+        android:id="@+id/btn_cat_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignLeft="@+id/btn_sub_select"
+        android:layout_alignStart="@+id/btn_sub_select"
+        android:text="SELECT" />
+
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/btn_drop"
-        android:text="select" />
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="18dp"
+        android:text="lec"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <Button
+        android:id="@+id/btn_lec_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_cat_select"
+        android:layout_alignStart="@+id/btn_cat_select"
+        android:layout_alignTop="@+id/textView4"
+        android:text="SELECT" />
 
 </RelativeLayout>

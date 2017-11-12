@@ -47,6 +47,26 @@ public class Subject {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Subject subject = (Subject) o;
+
+        if (num != subject.num) return false;
+        if (!id.equals(subject.id)) return false;
+        return name.equals(subject.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + num;
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Subject{" +
                 "id='" + id + '\'' +

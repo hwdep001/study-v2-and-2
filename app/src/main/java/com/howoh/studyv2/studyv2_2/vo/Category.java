@@ -9,27 +9,11 @@ public class Category {
     private String id;
     private String name;
     private int num;
+    private int version;
 
     private String subjectId;
 
     public Category() {}
-
-    public Category(String id) {
-        this.id = id;
-    }
-
-    public Category(String id, String name, int num) {
-        this.id = id;
-        this.name = name;
-        this.num = num;
-    }
-
-    public Category(String id, String name, int num, String subjectId) {
-        this.id = id;
-        this.name = name;
-        this.num = num;
-        this.subjectId = subjectId;
-    }
 
     public String getId() {
         return id;
@@ -55,6 +39,14 @@ public class Category {
         this.num = num;
     }
 
+    public float getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
     public String getSubjectId() {
         return subjectId;
     }
@@ -64,11 +56,34 @@ public class Category {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Category category = (Category) o;
+
+        if (num != category.num) return false;
+        if (version != category.version) return false;
+        if (!id.equals(category.id)) return false;
+        return name.equals(category.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + num;
+        result = 31 * result + version;
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Category{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", num=" + num +
+                ", version=" + version +
                 ", subjectId='" + subjectId + '\'' +
                 '}';
     }
