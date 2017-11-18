@@ -24,9 +24,11 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.howoh.studyv2.studyv2_2.service.AuthService;
 import com.howoh.studyv2.studyv2_2.util.CommonUtil;
+import com.howoh.studyv2.studyv2_2.vo.User;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -172,10 +174,10 @@ public class MainActivity extends BaseActivity
 
     private CatListFragment getCatListFragment(String subId) {
         CatListFragment catListFragment = new CatListFragment();
-        Bundle args = new Bundle();
+        Bundle bundle = new Bundle();
 
-        args.putString("subId", subId);
-        catListFragment.setArguments(args);
+        bundle.putString("subId", subId);
+        catListFragment.setArguments(bundle);
 
         return catListFragment;
     }
@@ -183,16 +185,28 @@ public class MainActivity extends BaseActivity
     ////////////////////////////////////////////////////////////////
 
     private void updateUserInfo(final FirebaseUser currentUser) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("email", currentUser.getEmail());
-        map.put("name", currentUser.getDisplayName());
-        map.put("photoURL", currentUser.getPhotoUrl().toString());
-        map.put("lastSignInDate", CommonUtil.dateToyyyy_MM_dd_HH_mm_ss(new Date()));
-
-        mDb.collection("users").document(currentUser.getUid()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+        mDb.collection("users").document(currentUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(Void aVoid) {
-                AuthService.setAuthInfo(currentUser.getUid());
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()) {
+                    User user = documentSnapshot.toObject(User.class);
+                    if(!user.getAuthenticated()) {
+                        signOut();
+                    } else {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("email", currentUser.getEmail());
+                        map.put("name", currentUser.getDisplayName());
+                        map.put("photoURL", currentUser.getPhotoUrl().toString());
+                        map.put("lastSignInDate", CommonUtil.dateToyyyy_MM_dd_HH_mm_ss(new Date()));
+
+                        mDb.collection("users").document(currentUser.getUid()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                AuthService.setAuthInfo(currentUser.getUid());
+                            }
+                        });
+                    }
+                }
             }
         });
     }

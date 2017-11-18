@@ -82,42 +82,42 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
                 dbHelper.dropTable(db);
                 break;
             case R.id.btn_sub_select:
-                if(dbHelper.isExistTable(db, ContactDBSubject.TABLE_NAME)) {
+                if(dbHelper.isExistTable(ContactDBSubject.TABLE_NAME)) {
                     for(Subject subject : dbHelper.getSubjecs()) {
                         Log.d(TAG, "[test]-select subs" + subject.toString());
                     }
                 }
                 break;
             case R.id.btn_cat_select:
-                if(dbHelper.isExistTable(db, ContactDBCategory.TABLE_NAME)) {
+                if(dbHelper.isExistTable(ContactDBCategory.TABLE_NAME)) {
                     for(Category category: dbHelper.getCategories()) {
                         Log.d(TAG, "[test]-select cats: " + category.toString());
                     }
                 }
                 break;
             case R.id.btn_lec_select:
-                if(dbHelper.isExistTable(db, ContactDBLecture.TABLE_NAME)) {
+                if(dbHelper.isExistTable(ContactDBLecture.TABLE_NAME)) {
                     for(Lecture lecture: dbHelper.getLectures()) {
                         Log.d(TAG, "[test]-select lecs: " + lecture.toString());
                     }
                 }
                 break;
             case R.id.btn_lev_select:
-                if(dbHelper.isExistTable(db, ContactDBLevel.TABLE_NAME)) {
+                if(dbHelper.isExistTable(ContactDBLevel.TABLE_NAME)) {
                     for(Level level: dbHelper.getLevels()) {
                         Log.d(TAG, "[test]-select levs: " + level.toString());
                     }
                 }
                 break;
             case R.id.btn_word_select:
-                if(dbHelper.isExistTable(db, ContactDBWord.TABLE_NAME)) {
+                if(dbHelper.isExistTable(ContactDBWord.TABLE_NAME)) {
                     for(Word word: dbHelper.getWords()) {
                         Log.d(TAG, "[test]-select words: " + word.toString());
                     }
                 }
                 break;
             case R.id.btn_word_if:
-                Log.d(TAG, "[test]-if table word: " + dbHelper.isExistTable(db, ContactDBWord.TABLE_NAME));
+                Log.d(TAG, "[test]-if table word: " + dbHelper.isExistTable(ContactDBWord.TABLE_NAME));
                 break;
         }
     }

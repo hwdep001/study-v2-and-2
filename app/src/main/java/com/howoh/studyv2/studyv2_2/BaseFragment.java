@@ -3,6 +3,7 @@ package com.howoh.studyv2.studyv2_2;
 import android.app.ProgressDialog;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by howoh on 2017-11-03.
@@ -33,5 +34,9 @@ public class BaseFragment extends Fragment {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+
+    public void setTitle(String title) {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(title);
     }
 }

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.howoh.studyv2.studyv2_2.vo.IdNameListView;
 import com.howoh.studyv2.studyv2_2.vo.Category;
 import com.howoh.studyv2.studyv2_2.vo.Lecture;
 import com.howoh.studyv2.studyv2_2.vo.Level;
@@ -69,12 +70,12 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d(TAG, "[test]-dropTable");
     }
 
-    public boolean isExistTable(SQLiteDatabase db, String tableName) {
+    public boolean isExistTable(String tableName) {
         boolean result = false;
         Cursor cursor = null;
 
         try {
-            cursor = db.rawQuery(EXIST_TABLE, new String[] {tableName});
+            cursor = getWritableDatabase().rawQuery(EXIST_TABLE, new String[] {tableName});
             if(cursor.moveToNext()) {
                 result = true;
             }
@@ -137,6 +138,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return ContactDBCategory.getAllBySubject(getWritableDatabase(), subjectId);
     }
 
+    public List<IdNameListView> getCategoriesForView(String subjectId) {
+        return ContactDBCategory.getAllBySubjectForView(getWritableDatabase(), subjectId);
+    }
+
     public List<Category> getCategories() {
         return ContactDBCategory.getAll(getWritableDatabase());
     }
@@ -171,6 +176,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public List<Lecture> getLectures(String categoryId) {
         return ContactDBLecture.getAllByCategory(getWritableDatabase(), categoryId);
+    }
+
+    public List<IdNameListView> getLecturesForView(String categoryId) {
+        return ContactDBLecture.getAllByCategoryForView(getWritableDatabase(), categoryId);
     }
 
     public List<Lecture> getLectures() {

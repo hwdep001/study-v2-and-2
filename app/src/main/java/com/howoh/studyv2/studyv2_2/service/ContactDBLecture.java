@@ -3,6 +3,7 @@ package com.howoh.studyv2.studyv2_2.service;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.howoh.studyv2.studyv2_2.vo.IdNameListView;
 import com.howoh.studyv2.studyv2_2.vo.Lecture;
 
 import java.util.ArrayList;
@@ -68,6 +69,12 @@ public class ContactDBLecture {
 
     public static final String SELECT_BY_CATEGORY =
             "SELECT " + COLUMN_ID + ", " + COLUMN_NAME + ", " + COLUMN_NUM + ", " + COLUMN_VERSION + ", " + COLUMN_CATEGORY_ID
+                    + " FROM " + TABLE_NAME
+                    + " WHERE " + COLUMN_CATEGORY_ID + "=? "
+                    + " ORDER BY " + COLUMN_NUM + " ASC";
+
+    public static final String SELECT_BY_CATEGORY_FORVIEW =
+            "SELECT " + COLUMN_ID + ", " + COLUMN_NAME
                     + " FROM " + TABLE_NAME
                     + " WHERE " + COLUMN_CATEGORY_ID + "=? "
                     + " ORDER BY " + COLUMN_NUM + " ASC";
@@ -141,6 +148,26 @@ public class ContactDBLecture {
                 item.setNum(cursor.getInt(2));
                 item.setVersion(cursor.getInt(3));
                 item.setCategoryId(cursor.getString(4));
+                result.add(item);
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return result;
+    }
+
+    public static List<IdNameListView> getAllByCategoryForView(SQLiteDatabase db, String categoryId) {
+        List<IdNameListView> result = new ArrayList<>();
+        IdNameListView item = null;
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(SELECT_BY_CATEGORY_FORVIEW, new String[] {categoryId});
+            while (cursor.moveToNext()) {
+                item = new IdNameListView();
+                item.setId(cursor.getString(0));
+                item.setName(cursor.getString(1));
                 result.add(item);
             }
         } finally {

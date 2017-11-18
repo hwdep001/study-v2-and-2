@@ -3,6 +3,7 @@ package com.howoh.studyv2.studyv2_2.service;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.howoh.studyv2.studyv2_2.vo.IdNameListView;
 import com.howoh.studyv2.studyv2_2.vo.Category;
 
 import java.util.ArrayList;
@@ -69,6 +70,12 @@ public class ContactDBCategory {
 
     public static final String SELECT_BY_SUBJECT =
             "SELECT " + COLUMN_ID + ", " + COLUMN_NAME + ", " + COLUMN_NUM + ", " + COLUMN_VERSION + ", " + COLUMN_SUBJECT_ID
+                    + " FROM " + TABLE_NAME
+                    + " WHERE " + COLUMN_SUBJECT_ID + "=? "
+                    + " ORDER BY " + COLUMN_NUM + " ASC";
+
+    public static final String SELECT_BY_SUBJECT_FORVIEW =
+            "SELECT " + COLUMN_ID + ", " + COLUMN_NAME
                     + " FROM " + TABLE_NAME
                     + " WHERE " + COLUMN_SUBJECT_ID + "=? "
                     + " ORDER BY " + COLUMN_NUM + " ASC";
@@ -142,6 +149,26 @@ public class ContactDBCategory {
                 item.setNum(cursor.getInt(2));
                 item.setVersion(cursor.getInt(3));
                 item.setSubjectId(cursor.getString(4));
+                result.add(item);
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return result;
+    }
+
+    public static List<IdNameListView> getAllBySubjectForView(SQLiteDatabase db, String subjectId) {
+        List<IdNameListView> result = new ArrayList<>();
+        IdNameListView item = null;
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(SELECT_BY_SUBJECT_FORVIEW, new String[] {subjectId});
+            while (cursor.moveToNext()) {
+                item = new IdNameListView();
+                item.setId(cursor.getString(0));
+                item.setName(cursor.getString(1));
                 result.add(item);
             }
         } finally {

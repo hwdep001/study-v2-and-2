@@ -8,21 +8,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.howoh.studyv2.studyv2_2.service.ContactDBSubject;
 import com.howoh.studyv2.studyv2_2.service.DBHelper;
 import com.howoh.studyv2.studyv2_2.view.IdNameListAdapter;
 import com.howoh.studyv2.studyv2_2.vo.IdNameListView;
-import com.howoh.studyv2.studyv2_2.vo.Subject;
+import com.howoh.studyv2.studyv2_2.vo.Category;
 
 import java.util.List;
 
-public class CatListFragment extends BaseFragment {
+public class LecListFragment extends BaseFragment {
 
-    private static final String TAG = CatListFragment.class.getSimpleName();
+    private static final String TAG = LecListFragment.class.getSimpleName();
 
     private FragmentManager fm;
     private DBHelper dbHelper;
     private View v;
+    private String catId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,15 +30,14 @@ public class CatListFragment extends BaseFragment {
         fm = getActivity().getSupportFragmentManager();
         dbHelper = DBHelper.getInstance(getActivity());
 
-        Subject sub = null;
+        Category cat = null;
 
-        if(dbHelper.isExistTable(ContactDBSubject.TABLE_NAME)) {
-            sub = dbHelper.getSubject(getArguments().getString("subId"));
-        }
+        catId = getArguments().getString("catId");
+        cat = dbHelper.getCategory(catId);
 
-        if(sub != null) {
-            setTitle(sub.getName());
-            setArrayAdapter(dbHelper.getCategoriesForView(sub.getId()));
+        if(cat != null) {
+            setTitle(cat.getName());
+            setArrayAdapter(dbHelper.getLecturesForView(cat.getId()));
         }
 
         return v;
@@ -53,18 +52,18 @@ public class CatListFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 IdNameListView item = (IdNameListView) parent.getItemAtPosition(position);
-                moveLecListFragment(((IdNameListView) parent.getItemAtPosition(position)).getId());
+                moveWordListFragment(((IdNameListView) parent.getItemAtPosition(position)).getId());
             }
         });
     }
 
-    private void moveLecListFragment(String catId) {
-        Bundle bundle = new Bundle();
-        bundle.putString("catId", catId);
-
-        LecListFragment lecListFragment = new LecListFragment();
-        lecListFragment.setArguments(bundle);
-
-        fm.beginTransaction().replace(R.id.content_main, lecListFragment).addToBackStack(null).commit();
+    private void moveWordListFragment(String lecId) {
+//        Bundle bundle = new Bundle();
+//        bundle.putString("lecId", lecId);
+//
+//        LecListFragment lecListFragment = new LecListFragment();
+//        lecListFragment.setArguments(bundle);
+//
+//        fm.beginTransaction().replace(R.id.content_main, lecListFragment).addToBackStack(null).commit();
     }
 }
