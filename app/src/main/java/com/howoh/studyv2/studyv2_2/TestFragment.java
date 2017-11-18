@@ -16,11 +16,13 @@ import com.howoh.studyv2.studyv2_2.service.ContactDBCategory;
 import com.howoh.studyv2.studyv2_2.service.ContactDBLecture;
 import com.howoh.studyv2.studyv2_2.service.ContactDBLevel;
 import com.howoh.studyv2.studyv2_2.service.ContactDBSubject;
+import com.howoh.studyv2.studyv2_2.service.ContactDBWord;
 import com.howoh.studyv2.studyv2_2.service.DBHelper;
 import com.howoh.studyv2.studyv2_2.vo.Category;
 import com.howoh.studyv2.studyv2_2.vo.Lecture;
 import com.howoh.studyv2.studyv2_2.vo.Level;
 import com.howoh.studyv2.studyv2_2.vo.Subject;
+import com.howoh.studyv2.studyv2_2.vo.Word;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +50,8 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
         Button catSelectBtn = (Button) v.findViewById(R.id.btn_cat_select);
         Button lecSelectBtn = (Button) v.findViewById(R.id.btn_lec_select);
         Button levSelectBtn = (Button) v.findViewById(R.id.btn_lev_select);
+        Button wordSelectBtn = (Button) v.findViewById(R.id.btn_word_select);
+        Button wordIfBtn = (Button) v.findViewById(R.id.btn_word_if);
 
         allDelBtn.setOnClickListener(this);
         verCheckBtn.setOnClickListener(this);
@@ -56,6 +60,8 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
         catSelectBtn.setOnClickListener(this);
         lecSelectBtn.setOnClickListener(this);
         levSelectBtn.setOnClickListener(this);
+        wordSelectBtn.setOnClickListener(this);
+        wordIfBtn.setOnClickListener(this);
 
         return v;
     }
@@ -100,14 +106,24 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
                     }
                 }
                 break;
+            case R.id.btn_word_select:
+                if(dbHelper.isExistTable(db, ContactDBWord.TABLE_NAME)) {
+                    for(Word word: dbHelper.getWords()) {
+                        Log.d(TAG, "[test]-select words: " + word.toString());
+                    }
+                }
+                break;
+            case R.id.btn_word_if:
+                Log.d(TAG, "[test]-if table word: " + dbHelper.isExistTable(db, ContactDBWord.TABLE_NAME));
+                break;
         }
     }
 
     private void checkVersion(final SQLiteDatabase db) {
         showProgressDialog(null);
         dbHelper.onCreate(db);
-        checkSub();
         checkLev();
+        checkSub();
     }
 
     private void checkSub() {
@@ -191,8 +207,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    private void checkLec(DocumentSnapshot catDs, final Category cat__) {
-        Log.d(TAG, "[test]-checkLec CAT: " + cat__.getName());
+    private void checkLec(DocumentSnapshot catDs, final Category cat) {
+
+        Log.d(TAG, "[test]-checkLec CAT: " + cat.getName());
 
         catDs.getReference().collection("lecs").orderBy("num").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -200,7 +217,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
 
                 Map<String, Lecture> map = new HashMap<>();
 
-                for(Lecture lec: dbHelper.getLectures(cat__.getId())) {
+                for(Lecture lec: dbHelper.getLectures(cat.getId())) {
                     map.put(lec.getId(), lec);
                 }
 
@@ -210,7 +227,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
 
                     Lecture lec = lecDs.toObject(Lecture.class);
                     lec.setId(lecDs.getId());
-                    lec.setCategoryId(cat__.getId());
+                    lec.setCategoryId(cat.getId());
                     Lecture lec_ = map.get(lec.getId());
 
                     Log.d(TAG, "[test]-checkLec : " + lec.getName());
@@ -237,7 +254,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
                     }
 
                     if(wordCheckFlag) {
-                        checkWord(lecDs, lec);
+                        checkWord(lecDs, cat, lec);
                     }
                 }
 
@@ -245,14 +262,57 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
                     dbHelper.deleteLecture(key);
                     Log.d(TAG, "[test]-checkLec-remove : " + map.get(key).getName());
                 }
-
-                hideProgressDialog();
             }
         });
     }
 
-    private void checkWord(DocumentSnapshot lecDs, final Lecture lec__) {
-        Log.d(TAG, "[test]-checkWord LEC : " + lec__.getName());
+    private void checkWord(final DocumentSnapshot lecDs, final Category cat, final Lecture lec) {
+
+        Log.d(TAG, "[test]-checkWord LEC : " + lec.getName());
+
+        lecDs.getReference().collection("words").orderBy("num").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot wordsDs) {
+
+                Map<String, Word> map = new HashMap<>();
+
+                for(Word word: dbHelper.getWords(lec.getId())) {
+                    map.put(word.getId(), word);
+                }
+
+                for(DocumentSnapshot wordDs: wordsDs) {
+                    Word word = wordDs.toObject(Word.class);
+                    word.setId(wordDs.getId());
+                    word.setLectureId(lec.getId());
+                    Word word_ = map.get(word.getId());
+
+                    // insert
+                    if (word_ == null) {
+                        dbHelper.insertWord(word);
+                        Log.d(TAG, "[test]-checkWord-insert : " + word.getHead1());
+                    } else {
+                        map.remove(word.getId());
+                    }
+
+                    // update
+                    if(word_ != null && !word.equals(word_)) {
+                        dbHelper.updateWithOutLevel(word);
+                        Log.d(TAG, "[test]-checkWord-update : " + word.getHead1());
+                    }
+                }
+
+                for(String key: map.keySet()) {
+                    dbHelper.deleteWord(key);
+                    Log.d(TAG, "[test]-checkWord-remove : " + map.get(key).getHead1());
+                }
+
+                // lecture, cat version update
+                dbHelper.updateLecture(lec);
+                dbHelper.updateCategory(cat);
+
+                hideProgressDialog();
+            }
+        });
     }
 
     private void checkLev() {
@@ -288,4 +348,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
             }
         });
     }
+
+
+
+    /*
+    * word 체크까지 함
+    * processDialog 문제 해결해야 함
+    * word 테스트 더 해보기 lec 늘려서
+    * */
 }

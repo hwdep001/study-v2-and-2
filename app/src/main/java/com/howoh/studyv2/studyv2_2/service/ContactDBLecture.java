@@ -42,9 +42,19 @@ public class ContactDBLecture {
                     + " (" + COLUMN_ID + "," + COLUMN_NAME + "," + COLUMN_NUM + "," + COLUMN_VERSION + ", " + COLUMN_CATEGORY_ID + ")"
                     + " VALUES (?, ?, ?, ?, ? )";
 
+    public static final String INSERT_WITHOUT_VERSION =
+            "INSERT INTO " + TABLE_NAME
+                    + " (" + COLUMN_ID + "," + COLUMN_NAME + "," + COLUMN_NUM + "," + COLUMN_VERSION + ", " + COLUMN_CATEGORY_ID + ")"
+                    + " VALUES (?, ?, ?, -1, ? )";
+
     public static final String UPDATE =
             "UPDATE " + TABLE_NAME
                     + " SET " + COLUMN_NAME + "=?, " + COLUMN_NUM + "=?, " + COLUMN_VERSION + "=?, " + COLUMN_CATEGORY_ID + "=? "
+                    + " WHERE " + COLUMN_ID + "=? ";
+
+    public static final String UPDATE_WITHOUT_VERSION =
+            "UPDATE " + TABLE_NAME
+                    + " SET " + COLUMN_NAME + "=?, " + COLUMN_NUM + "=?, " + COLUMN_VERSION + "=-1, " + COLUMN_CATEGORY_ID + "=? "
                     + " WHERE " + COLUMN_ID + "=? ";
 
     public static final String DELETE_BY_ID =
@@ -76,8 +86,18 @@ public class ContactDBLecture {
         db.close();
     }
 
+    public static void insertWithOutVersion(SQLiteDatabase db, Lecture item) {
+        db.execSQL(INSERT_WITHOUT_VERSION, new Object[] {item.getId(), item.getName(), item.getNum(), item.getCategoryId()});
+        db.close();
+    }
+
     public static void update(SQLiteDatabase db, Lecture item) {
         db.execSQL(UPDATE, new Object[] {item.getName(), item.getNum(), item.getVersion(), item.getCategoryId(), item.getId()});
+        db.close();
+    }
+
+    public static void updateWithOutVersion(SQLiteDatabase db, Lecture item) {
+        db.execSQL(UPDATE_WITHOUT_VERSION, new Object[] {item.getName(), item.getNum(), item.getCategoryId(), item.getId()});
         db.close();
     }
 

@@ -10,8 +10,8 @@ import com.howoh.studyv2.studyv2_2.vo.Category;
 import com.howoh.studyv2.studyv2_2.vo.Lecture;
 import com.howoh.studyv2.studyv2_2.vo.Level;
 import com.howoh.studyv2.studyv2_2.vo.Subject;
+import com.howoh.studyv2.studyv2_2.vo.Word;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,17 +52,19 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(ContactDBLevel.CREATE_TABLE);
         db.execSQL(ContactDBSubject.CREATE_TABLE);
         db.execSQL(ContactDBCategory.CREATE_TABLE);
         db.execSQL(ContactDBLecture.CREATE_TABLE);
-        db.execSQL(ContactDBLevel.CREATE_TABLE);
+        db.execSQL(ContactDBWord.CREATE_TABLE);
         Log.d(TAG, "[test]-onCreate");
     }
 
     public void dropTable(SQLiteDatabase db) {
-        db.execSQL(ContactDBSubject.DROP_TABLE);
-        db.execSQL(ContactDBCategory.DROP_TABLE);
+        db.execSQL(ContactDBWord.DROP_TABLE);
         db.execSQL(ContactDBLecture.DROP_TABLE);
+        db.execSQL(ContactDBCategory.DROP_TABLE);
+        db.execSQL(ContactDBSubject.DROP_TABLE);
         db.execSQL(ContactDBLevel.DROP_TABLE);
         Log.d(TAG, "[test]-dropTable");
     }
@@ -112,8 +114,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void insertCategoryWithOutVersion(Category category) {
-        category.setVersion(-1);
-        ContactDBCategory.insert(getWritableDatabase(), category);
+        ContactDBCategory.insertWithOutVersion(getWritableDatabase(), category);
     }
 
     public void updateCategory(Category category) {
@@ -121,8 +122,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void updateCategoryWithOutVersion(Category category) {
-        category.setVersion(-1);
-        ContactDBCategory.update(getWritableDatabase(), category);
+        ContactDBCategory.updateWithOutVersion(getWritableDatabase(), category);
     }
 
     public void deleteCategory(String id) {
@@ -150,8 +150,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void insertLectureWithOutVersion(Lecture lecture) {
-        lecture.setVersion(-1);
-        ContactDBLecture.insert(getWritableDatabase(), lecture);
+        ContactDBLecture.insertWithOutVersion(getWritableDatabase(), lecture);
     }
 
     public void updateLecture(Lecture lecture) {
@@ -159,8 +158,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void updateLectureWithOutVersion(Lecture lecture) {
-        lecture.setVersion(-1);
-        ContactDBLecture.update(getWritableDatabase(), lecture);
+        ContactDBLecture.updateWithOutVersion(getWritableDatabase(), lecture);
     }
 
     public void deleteLecture(String id) {
@@ -179,9 +177,41 @@ public class DBHelper extends SQLiteOpenHelper {
         return ContactDBLecture.getAll(getWritableDatabase());
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // WORD
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void insertWord(Word word) {
+        ContactDBWord.insert(getWritableDatabase(), word);
+    }
+
+    public void updateWord(Word word) {
+        ContactDBWord.update(getWritableDatabase(), word);
+    }
+
+    public void updateWithOutLevel(Word word) {
+        ContactDBWord.updateWithOutLevel(getWritableDatabase(), word);
+    }
+
+    public void deleteWord(String id) {
+        ContactDBWord.delete(getWritableDatabase(), id);
+    }
+
+    public Word getWord(String id) {
+        return ContactDBWord.getById(getWritableDatabase(), id);
+    }
+
+    public List<Word> getWords(String lectureId) {
+        return ContactDBWord.getAllByLecture(getWritableDatabase(), lectureId);
+    }
+
+    public List<Word> getWords() {
+        return ContactDBWord.getAll(getWritableDatabase());
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // LECTURE
+    // LEVEL
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void insertLevel(Level level) {

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+
  * Created by howoh on 2017-11-05.
  */
 
@@ -42,9 +43,19 @@ public class ContactDBCategory {
                     + " (" + COLUMN_ID + "," + COLUMN_NAME + "," + COLUMN_NUM + "," + COLUMN_VERSION + ", " + COLUMN_SUBJECT_ID + ")"
                     + " VALUES (?, ?, ?, ?, ? )";
 
+    public static final String INSERT_WITHOUT_VERSION =
+            "INSERT INTO " + TABLE_NAME
+                    + " (" + COLUMN_ID + "," + COLUMN_NAME + "," + COLUMN_NUM + "," + COLUMN_VERSION + ", " + COLUMN_SUBJECT_ID + ")"
+                    + " VALUES (?, ?, ?, -1, ? )";
+
     public static final String UPDATE =
             "UPDATE " + TABLE_NAME
                     + " SET " + COLUMN_NAME + "=?, " + COLUMN_NUM + "=?, " + COLUMN_VERSION + "=?, " + COLUMN_SUBJECT_ID + "=? "
+                    + " WHERE " + COLUMN_ID + "=? ";
+
+    public static final String UPDATE_WITHOUT_VERSION =
+            "UPDATE " + TABLE_NAME
+                    + " SET " + COLUMN_NAME + "=?, " + COLUMN_NUM + "=?, " + COLUMN_VERSION + "=-1, " + COLUMN_SUBJECT_ID + "=? "
                     + " WHERE " + COLUMN_ID + "=? ";
 
     public static final String DELETE_BY_ID =
@@ -76,8 +87,18 @@ public class ContactDBCategory {
         db.close();
     }
 
+    public static void insertWithOutVersion(SQLiteDatabase db, Category item) {
+        db.execSQL(INSERT_WITHOUT_VERSION, new Object[] {item.getId(), item.getName(), item.getNum(), item.getSubjectId()});
+        db.close();
+    }
+
     public static void update(SQLiteDatabase db, Category item) {
         db.execSQL(UPDATE, new Object[] {item.getName(), item.getNum(), item.getVersion(), item.getSubjectId(), item.getId()});
+        db.close();
+    }
+
+    public static void updateWithOutVersion(SQLiteDatabase db, Category item) {
+        db.execSQL(UPDATE_WITHOUT_VERSION, new Object[] {item.getName(), item.getNum(), item.getSubjectId(), item.getId()});
         db.close();
     }
 

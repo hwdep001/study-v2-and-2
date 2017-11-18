@@ -16,8 +16,8 @@ public class ContactDBLevel {
 
     public static final String TABLE_NAME = "level";
 
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_NAME = "name";
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_NAME = "name";
 
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
