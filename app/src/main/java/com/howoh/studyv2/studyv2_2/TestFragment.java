@@ -35,6 +35,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
     private FirebaseFirestore mDb;
     DBHelper dbHelper;
 
+    private boolean isLecCheck = false;
+    private boolean isWordCheck = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_test, container, false);
@@ -120,6 +123,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void checkVersion(final SQLiteDatabase db) {
+        isLecCheck = false;
+        isWordCheck = false;
+
         showProgressDialog(null);
         dbHelper.onCreate(db);
         checkLev();
@@ -150,6 +156,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void checkCat(QuerySnapshot subsDs) {
+
         for(final DocumentSnapshot subDs : subsDs) {
             subDs.getReference().collection("cats").orderBy("num").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
@@ -195,6 +202,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
 
                         if(lecCheckFlag) {
                             checkLec(catDs, cat);
+                            isLecCheck = true;
                         }
                     }
 
@@ -204,6 +212,10 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
                     }
                 }
             });
+        }
+
+        if(!isLecCheck) {
+            hideProgressDialog();
         }
     }
 
@@ -255,6 +267,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
 
                     if(wordCheckFlag) {
                         checkWord(lecDs, cat, lec);
+                        isWordCheck = true;
                     }
                 }
 
@@ -264,6 +277,11 @@ public class TestFragment extends BaseFragment implements View.OnClickListener {
                 }
             }
         });
+
+        if(!isWordCheck) {
+            hideProgressDialog();
+            dbHelper.updateCategory(cat);
+        }
     }
 
     private void checkWord(final DocumentSnapshot lecDs, final Category cat, final Lecture lec) {
