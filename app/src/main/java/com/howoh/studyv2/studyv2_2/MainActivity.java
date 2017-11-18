@@ -66,7 +66,7 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fm = getSupportFragmentManager();
-        fm.beginTransaction().replace(R.id.content_main, new CatListFragment()).commit();
+        fm.beginTransaction().replace(R.id.content_main, getCatListFragment("ew")).commit();
 
         initFirebase();
         initNavText(navigationView);
@@ -152,13 +152,13 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_ew) {
-            fm.beginTransaction().replace(R.id.content_main, new CatListFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_main, getCatListFragment("ew")).commit();
         } else if (id == R.id.nav_lw) {
-            fm.beginTransaction().replace(R.id.content_main, new CatListFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_main, getCatListFragment("lw")).commit();
         } else if (id == R.id.nav_c4) {
-            fm.beginTransaction().replace(R.id.content_main, new CatListFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_main, getCatListFragment("c4")).commit();
         } else if (id == R.id.nav_cc) {
-            fm.beginTransaction().replace(R.id.content_main, new CatListFragment()).commit();
+            fm.beginTransaction().replace(R.id.content_main, getCatListFragment("cc")).commit();
         } else if (id == R.id.nav_sign_out) {
             signOut();
         } else if (id == R.id.nav_test) {
@@ -168,6 +168,16 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private CatListFragment getCatListFragment(String subId) {
+        CatListFragment catListFragment = new CatListFragment();
+        Bundle args = new Bundle();
+
+        args.putString("subId", subId);
+        catListFragment.setArguments(args);
+
+        return catListFragment;
     }
 
     ////////////////////////////////////////////////////////////////
