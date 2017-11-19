@@ -1,5 +1,6 @@
 package com.howoh.studyv2.studyv2_2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,12 +55,8 @@ public class CatListFragment extends BaseFragment implements
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String catId = ((IdNameListView) parent.getItemAtPosition(position)).getId();
 
-        Bundle bundle = new Bundle();
-        bundle.putString("catId", catId);
-
-        LecListFragment lecListFragment = new LecListFragment();
-        lecListFragment.setArguments(bundle);
-
-        openFragment(lecListFragment);
+        Intent intent = new Intent(getActivity(), LecListActivity.class);
+        intent.putExtra("catId", catId);
+        startActivity(intent);
     }
 }
