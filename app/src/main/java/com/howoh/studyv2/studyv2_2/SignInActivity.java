@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,7 +30,7 @@ import java.util.Date;
  * Created by howoh on 2017-11-03.
  */
 
-public class SignInActivity extends BaseActivity implements
+public class SignInActivity extends SuperBaseActivity implements
         View.OnClickListener {
 
     private static final String TAG = SignInActivity.class.getSimpleName();
@@ -48,16 +47,7 @@ public class SignInActivity extends BaseActivity implements
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
+        mGoogleApiClient = getmGoogleApiClient();
         mAuth = FirebaseAuth.getInstance();
         mDb = FirebaseFirestore.getInstance();
 
