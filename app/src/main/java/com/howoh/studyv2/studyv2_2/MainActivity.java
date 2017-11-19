@@ -47,10 +47,6 @@ public class MainActivity extends BaseActivity
     private FirebaseFirestore mDb;
     private FirebaseUser currentUser;
 
-    // onBackPressed
-    private final long FINISH_INTERVAL_TIME = 2000;
-    private long   backPressedTime = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,26 +101,6 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if(fm.getBackStackEntryCount() > 0) {
-            super.onBackPressed();
-        } else {
-            long tempTime = System.currentTimeMillis();
-            long intervalTime = tempTime - backPressedTime;
-
-            if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime) {
-                super.onBackPressed();
-            } else {
-                backPressedTime = tempTime;
-                Toast.makeText(getApplicationContext(), R.string.back_pressed_msg, Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -151,6 +127,8 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         if (id == R.id.nav_ew) {
             fm.beginTransaction().replace(R.id.content_main, getCatListFragment("ew")).commit();
@@ -184,28 +162,30 @@ public class MainActivity extends BaseActivity
     ////////////////////////////////////////////////////////////////
 
     private void updateUserInfo(final FirebaseUser currentUser) {
-        mDb.collection("users").document(currentUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        mDb.collection("users").document(currentUser.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()) {
-                    User user = documentSnapshot.toObject(User.class);
-                    if(!user.getAuthenticated()) {
-                        signOut();
-                    } else {
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("email", currentUser.getEmail());
-                        map.put("name", currentUser.getDisplayName());
-                        map.put("photoURL", currentUser.getPhotoUrl().toString());
-                        map.put("lastSignInDate", CommonUtil.dateToyyyy_MM_dd_HH_mm_ss(new Date()));
+                    if(documentSnapshot.exists()) {
+                        User user = documentSnapshot.toObject(User.class);
+                        if(!user.getAuthenticated()) {
+                            signOut();
+                        } else {
+                            Map<String, Object> map = new HashMap<>();
+                            map.put("email", currentUser.getEmail());
+                            map.put("name", currentUser.getDisplayName());
+                            map.put("photoURL", currentUser.getPhotoUrl().toString());
+                            map.put("lastSignInDate", CommonUtil.dateToyyyy_MM_dd_HH_mm_ss(new Date()));
 
-                        mDb.collection("users").document(currentUser.getUid()).update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                AuthService.setAuthInfo(currentUser.getUid());
-                            }
-                        });
+                            mDb.collection("users").document(currentUser.getUid()).update(map)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                        AuthService.setAuthInfo(currentUser.getUid());
+                                }
+                            });
+                        }
                     }
-                }
             }
         });
     }
