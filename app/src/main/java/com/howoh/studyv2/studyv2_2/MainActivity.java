@@ -109,16 +109,15 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if(fm.getBackStackEntryCount() > 0) {
+            super.onBackPressed();
         } else {
             long tempTime = System.currentTimeMillis();
             long intervalTime = tempTime - backPressedTime;
 
-            if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime)
-            {
+            if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime) {
                 super.onBackPressed();
-            }
-            else
-            {
+            } else {
                 backPressedTime = tempTime;
                 Toast.makeText(getApplicationContext(), R.string.back_pressed_msg, Toast.LENGTH_SHORT).show();
             }
