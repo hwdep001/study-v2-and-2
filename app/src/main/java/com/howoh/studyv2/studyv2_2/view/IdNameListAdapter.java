@@ -40,12 +40,8 @@ public class IdNameListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.listview_idname, parent, false);
         }
 
-        TextView idTextView = (TextView) convertView.findViewById(R.id.listview_id) ;
         TextView nameTextView = (TextView) convertView.findViewById(R.id.listview_name) ;
-
         IdNameListView catListView = list.get(position);
-
-        idTextView.setText(catListView.getId());
         nameTextView.setText(catListView.getName());
 
         return convertView;
