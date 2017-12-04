@@ -1,5 +1,6 @@
 package com.howoh.studyv2.studyv2_2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -19,6 +20,7 @@ public class LecListActivity extends BaseActivity implements
     private static final String TAG = LecListActivity.class.getSimpleName();
 
     private DBHelper dbHelper;
+    private String subId;
     private String catId;
 
     @Override
@@ -30,6 +32,7 @@ public class LecListActivity extends BaseActivity implements
         setSupportActionBar(toolbar);
 
         dbHelper = DBHelper.getInstance(this);
+        subId = getIntent().getStringExtra("subId");
         catId = getIntent().getStringExtra("catId");
 
         Category cat = dbHelper.getCategory(catId);
@@ -57,5 +60,11 @@ public class LecListActivity extends BaseActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String lecId = ((IdNameListView) parent.getItemAtPosition(position)).getId();
+
+//        Intent intent = new Intent(this, .class);
+//        intent.putExtra("subId", subId);
+//        intent.putExtra("catId", catId);
+//        intent.putExtra("lecId", lecId);
+//        startActivity(intent);
     }
 }

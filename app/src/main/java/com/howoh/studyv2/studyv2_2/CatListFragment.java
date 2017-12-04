@@ -23,6 +23,7 @@ public class CatListFragment extends BaseFragment implements
 
     private DBHelper dbHelper;
     private View v;
+    private String subId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class CatListFragment extends BaseFragment implements
         }
 
         if(sub != null) {
+            subId = sub.getId();
             setTitle(sub.getName());
             setArrayAdapter(dbHelper.getCategoriesForView(sub.getId()));
         }
@@ -56,6 +58,7 @@ public class CatListFragment extends BaseFragment implements
         String catId = ((IdNameListView) parent.getItemAtPosition(position)).getId();
 
         Intent intent = new Intent(getActivity(), LecListActivity.class);
+        intent.putExtra("subId", subId);
         intent.putExtra("catId", catId);
         startActivity(intent);
     }
