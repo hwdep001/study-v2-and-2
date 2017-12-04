@@ -20,6 +20,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_leclist" />
+    <include layout="@layout/fragment_idname_list" />
 
 </android.support.design.widget.CoordinatorLayout>
