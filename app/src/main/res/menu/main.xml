@@ -5,6 +5,6 @@
     <item
         android:id="@+id/action_test_setting"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_border_color_white_48dp"
+        android:icon="@mipmap/ic_border_color_white_24dp"
         android:title="test_setting"/>
 </menu>
