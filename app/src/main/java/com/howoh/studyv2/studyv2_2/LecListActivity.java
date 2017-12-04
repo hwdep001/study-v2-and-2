@@ -31,6 +31,11 @@ public class LecListActivity extends BaseActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         dbHelper = DBHelper.getInstance(this);
         subId = getIntent().getStringExtra("subId");
         catId = getIntent().getStringExtra("catId");
@@ -49,6 +54,12 @@ public class LecListActivity extends BaseActivity implements
         ListView listView = (ListView) findViewById(R.id.frg_idname_listview);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
