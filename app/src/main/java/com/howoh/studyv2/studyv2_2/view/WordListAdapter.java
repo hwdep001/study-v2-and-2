@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -19,13 +18,19 @@ import java.util.List;
  * Created by howoh on 2017-11-18.
  */
 
-public class WordListAdapter extends BaseAdapter
-    {
+public class WordListAdapter extends BaseAdapter implements View.OnClickListener {
+
+    public interface ListBtnClickListener {
+        void onListBtnClick(int viewId) ;
+    }
+    private ListBtnClickListener listBtnClickListener ;
+
 
     private List<WordListView> list = new ArrayList<>();
 
-    public WordListAdapter(List<WordListView> list) {
+    public WordListAdapter(List<WordListView> list, ListBtnClickListener clickListener) {
         this.list = list;
+        this.listBtnClickListener = clickListener;
     }
 
     @Override
@@ -59,6 +64,13 @@ public class WordListAdapter extends BaseAdapter
         body2TextView.setText(wordListView.getBody2());
         etcTextView.setText(wordListView.getCategoryName() + " - " + wordListView.getLectureName());
 
+        head1TextView.setOnClickListener(this);
+        head2TextView.setOnClickListener(this);
+        body1TextView.setOnClickListener(this);
+        body2TextView.setOnClickListener(this);
+        upBtn.setOnClickListener(this);
+        downBtn.setOnClickListener(this);
+
         return convertView;
     }
 
@@ -70,5 +82,12 @@ public class WordListAdapter extends BaseAdapter
     @Override
     public Object getItem(int position) {
         return list.get(position);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(this.listBtnClickListener != null) {
+            this.listBtnClickListener.onListBtnClick(v.getId());
+        }
     }
 }
