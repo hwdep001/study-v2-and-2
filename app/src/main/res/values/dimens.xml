@@ -5,4 +5,16 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- custom -->
+    <dimen name="height_0">0dp</dimen>
+
+    <!-- word list -->
+    <dimen name="wordlist_minheight">500dp</dimen>
+    <dimen name="wordlist_head_height">90dp</dimen>
+    <dimen name="wordlist_head1_height">50dp</dimen>
+    <dimen name="wordlist_head2_height">40dp</dimen>
+    <dimen name="wordlist_body_height">350dp</dimen>
+    <dimen name="wordlist_body1_height">210dp</dimen>
+    <dimen name="wordlist_body2_height">140dp</dimen>
 </resources>

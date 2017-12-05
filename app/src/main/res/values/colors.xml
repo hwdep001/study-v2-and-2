@@ -7,7 +7,14 @@
     <color name="silver">#C0C0C0</color>
     <color name="darkgray">#A9A9A9</color>
     <color name="gray">#808080</color>
+    <color name="black">#000000</color>
+
     <!-- custom -->
-    <color name="contentBg">#e9ebee</color>
+    <color name="contentBg">#f5f5ff</color>
+    <color name="level2">#488aff</color>
+    <color name="level1">#6652bfed</color>
+    <color name="level0">#e9ebee</color>
+    <color name="level_1">#ff9999</color>
+    <color name="level_2">#ed4848</color>
 
 </resources>

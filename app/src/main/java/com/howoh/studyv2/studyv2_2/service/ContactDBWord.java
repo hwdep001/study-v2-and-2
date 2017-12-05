@@ -134,7 +134,7 @@ public class ContactDBWord {
     }
 
     public static void updateLevel(SQLiteDatabase db, String id, int level) {
-        db.execSQL(UPDATE_LEVEL, new Object[] {id, level});
+        db.execSQL(UPDATE_LEVEL, new Object[] {level, id});
         db.close();
     }
 

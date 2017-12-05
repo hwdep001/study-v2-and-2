@@ -18,6 +18,9 @@ public class WordListView {
     private String categoryName;
     private String lectureName;
 
+    private boolean headFlag;
+    private boolean bodyFlag;
+
     public String getId() {
         return id;
     }
@@ -96,5 +99,21 @@ public class WordListView {
 
     public void setLectureName(String lectureName) {
         this.lectureName = lectureName;
+    }
+
+    public boolean isHeadFlag() {
+        return headFlag;
+    }
+
+    public void setHeadFlag(boolean headFlag) {
+        this.headFlag = headFlag;
+    }
+
+    public boolean isBodyFlag() {
+        return bodyFlag;
+    }
+
+    public void setBodyFlag(boolean bodyFlag) {
+        this.bodyFlag = bodyFlag;
     }
 }
