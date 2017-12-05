@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.howoh.studyv2.studyv2_2.vo.Word;
+import com.howoh.studyv2.studyv2_2.vo.WordListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,9 @@ public class ContactDBWord {
     private static final String COLUMN_NUM = "num";
     private static final String COLUMN_LECTURE_ID = "lectureId";
     private static final String COLUMN_LEVEL_ID = "levelId";
+
+    private static final String COLUMN_LECTURE_NAME = ContactDBLecture.TABLE_NAME + "." + ContactDBLecture.COLUMN_NAME;
+    private static final String COLUMN_CATEGORY_NAME = ContactDBCategory.TABLE_NAME + "." + ContactDBCategory.COLUMN_NAME;
 
     public static final String CREATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
@@ -64,6 +68,11 @@ public class ContactDBWord {
                     + COLUMN_NUM + "=?, " + COLUMN_LECTURE_ID + "=? "
                     + " WHERE " + COLUMN_ID + "=? ";
 
+    public static final String UPDATE_LEVEL =
+            "UPDATE " + TABLE_NAME
+                    + " SET " + COLUMN_LEVEL_ID + "=? "
+                    + " WHERE " + COLUMN_ID + "=? ";
+
     public static final String DELETE_BY_ID =
             "DELETE FROM " + TABLE_NAME
                     + " WHERE " + COLUMN_ID + "=?";
@@ -80,6 +89,21 @@ public class ContactDBWord {
                     + " FROM " + TABLE_NAME
                     + " WHERE " + COLUMN_LECTURE_ID + "=? "
                     + " ORDER BY " + COLUMN_NUM + " ASC";
+
+    public static final String SELECT_BY_LECTURE_FORVIEW =
+            "SELECT " + TABLE_NAME + "." + COLUMN_ID + ", " + TABLE_NAME + "." + COLUMN_HEAD1
+                    + ", " + TABLE_NAME + "." + COLUMN_HEAD2 + ", " + TABLE_NAME + "." + COLUMN_BODY1 + ", "
+                    + TABLE_NAME + "." + COLUMN_BODY2 + ", " + TABLE_NAME + "." + COLUMN_NUM
+                    + ", " + TABLE_NAME + "." + COLUMN_LECTURE_ID + ", " + TABLE_NAME + "." + COLUMN_LEVEL_ID + ", "
+                    + COLUMN_LECTURE_NAME + ", " + COLUMN_CATEGORY_NAME
+                    + " FROM " + TABLE_NAME
+                    + " LEFT JOIN " + ContactDBLecture.TABLE_NAME
+                    + " ON " + TABLE_NAME + "." + COLUMN_LECTURE_ID + " = " + ContactDBLecture.TABLE_NAME + "." + ContactDBLecture.COLUMN_ID
+                    + " LEFT JOIN " + ContactDBCategory.TABLE_NAME
+                    + " ON " + ContactDBLecture.TABLE_NAME + "." + ContactDBLecture.COLUMN_CATEGORY_ID
+                        + " = " + ContactDBCategory.TABLE_NAME + "." + ContactDBCategory.COLUMN_ID
+                    + " WHERE " + TABLE_NAME + "." + COLUMN_LECTURE_ID + "=? "
+                    + " ORDER BY " + TABLE_NAME + "." + COLUMN_NUM + " ASC";
 
     public static final String SELECT_ALL =
             "SELECT " + COLUMN_ID + ", " + COLUMN_HEAD1 + ", " + COLUMN_HEAD2 + ", " + COLUMN_BODY1 + ", "
@@ -106,6 +130,11 @@ public class ContactDBWord {
     public static void updateWithOutLevel(SQLiteDatabase db, Word item) {
         db.execSQL(UPDATE_WITHOUT_LEVEL, new Object[] {item.getHead1(), item.getHead2(), item.getBody1(),
                 item.getBody2(), item.getNum(), item.getLectureId(), item.getId()});
+        db.close();
+    }
+
+    public static void updateLevel(SQLiteDatabase db, String id, int level) {
+        db.execSQL(UPDATE_LEVEL, new Object[] {id, level});
         db.close();
     }
 
@@ -155,6 +184,34 @@ public class ContactDBWord {
                 item.setNum(cursor.getInt(5));
                 item.setLectureId(cursor.getString(6));
                 item.setLevelId(cursor.getInt(7));
+                result.add(item);
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return result;
+    }
+
+    public static List<WordListView> getAllByLectureForView(SQLiteDatabase db, String lectureId) {
+        List<WordListView> result = new ArrayList<>();
+        WordListView item = null;
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(SELECT_BY_LECTURE_FORVIEW, new String[] {lectureId});
+            while (cursor.moveToNext()) {
+                item = new WordListView();
+                item.setId(cursor.getString(0));
+                item.setHead1(cursor.getString(1));
+                item.setHead2(cursor.getString(2));
+                item.setBody1(cursor.getString(3));
+                item.setBody2(cursor.getString(4));
+                item.setNum(cursor.getInt(5));
+                item.setLectureId(cursor.getString(6));
+                item.setLevelId(cursor.getInt(7));
+                item.setLectureName(cursor.getString(8));
+                item.setCategoryName(cursor.getString(9));
                 result.add(item);
             }
         } finally {

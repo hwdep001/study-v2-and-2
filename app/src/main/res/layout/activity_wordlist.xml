@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.howoh.studyv2.studyv2_2.LecListActivity">
+    tools:context="com.howoh.studyv2.studyv2_2.WordListActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,6 +20,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/fragment_idname_list" />
+    <include layout="@layout/content_wordlist" />
 
 </android.support.design.widget.CoordinatorLayout>

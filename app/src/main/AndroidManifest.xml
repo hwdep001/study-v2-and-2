@@ -19,6 +19,9 @@
             android:name=".LecListActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
+            android:name=".WordListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".StartActivity"
             android:label="Study"
             android:theme="@style/AppTheme.NoActionBar">

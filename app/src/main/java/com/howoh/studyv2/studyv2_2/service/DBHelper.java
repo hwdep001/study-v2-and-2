@@ -12,6 +12,7 @@ import com.howoh.studyv2.studyv2_2.vo.Lecture;
 import com.howoh.studyv2.studyv2_2.vo.Level;
 import com.howoh.studyv2.studyv2_2.vo.Subject;
 import com.howoh.studyv2.studyv2_2.vo.Word;
+import com.howoh.studyv2.studyv2_2.vo.WordListView;
 
 import java.util.List;
 
@@ -202,6 +203,10 @@ public class DBHelper extends SQLiteOpenHelper {
         ContactDBWord.updateWithOutLevel(getWritableDatabase(), word);
     }
 
+    public void updateWordLevel(String id, int level) {
+        ContactDBWord.updateLevel(getWritableDatabase(), id, level);
+    }
+
     public void deleteWord(String id) {
         ContactDBWord.delete(getWritableDatabase(), id);
     }
@@ -212,6 +217,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public List<Word> getWords(String lectureId) {
         return ContactDBWord.getAllByLecture(getWritableDatabase(), lectureId);
+    }
+
+    public List<WordListView> getWordsForView(String lectureId) {
+        return ContactDBWord.getAllByLectureForView(getWritableDatabase(), lectureId);
     }
 
     public List<Word> getWords() {
